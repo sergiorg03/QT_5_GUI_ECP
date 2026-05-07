@@ -93,6 +93,7 @@ class MainWindow(QMainWindow):
         self.model = QStandardItemModel(0, 2, self)  # 0 rows, 2 columns
         self.model.setHorizontalHeaderLabels(["Billete/Moneda", "Cantidad"])
         self.lista_monedas.setModel(self.model)
+        self.lista_monedas.verticalHeader().setVisible(False)
         self.lista_monedas.horizontalHeader().setStretchLastSection(True)
         self.lista_monedas.setEditTriggers(QTableView.NoEditTriggers)
         # Populate initial rows with denominations and zero quantity
@@ -101,7 +102,9 @@ class MainWindow(QMainWindow):
         # Populate initial rows with zero quantities
         for moneda in self.denominations:
             item_moneda = QStandardItem(moneda)
+            item_moneda.setTextAlignment(Qt.AlignCenter)
             item_cantidad = QStandardItem("0")
+            item_cantidad.setTextAlignment(Qt.AlignCenter)
             self.model.appendRow([item_moneda, item_cantidad])
 
 
@@ -145,7 +148,7 @@ class MainWindow(QMainWindow):
             self.cambio_dict, cambio_total = calcular_cambio_monedas(self.w_importe_prod.value(), self.w_cantidad_cli.value())
             # If both importe and pago are zero, show info and skip further processing
             if self.w_importe_prod.value() == 0 and self.w_cantidad_cli.value() == 0:
-                self.show_dialog("Importe y pago son 0. No hay cambio.", "Información", QMessageBox.Information)
+                self.show_dialog("Importe y pago son 0. ", "Información", QMessageBox.Information)
                 self.w_cantidad_dev.setValue(0)  # No change
             else:
                 self.w_cantidad_dev.setValue(cambio_total)  # Asignamos el valor al QDoubleSpinBox

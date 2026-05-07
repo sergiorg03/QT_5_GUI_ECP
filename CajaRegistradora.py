@@ -153,15 +153,21 @@ class MainWindow(QMainWindow):
                 # Actualizar el modelo de la tabla con el cambio calculado
                 # Update table with all denominations, showing quantity to give (0 if none)
                 self.model.setRowCount(0)  # clear existing rows
+                any_change = False
                 for moneda_str in self.denominations:
                     # Convert string like "500.0€" to numeric value for lookup
                     valor = float(moneda_str.replace('€', ''))
                     cantidad = self.cambio_dict.get(valor, 0)
-                    item_moneda = QStandardItem(moneda_str)
-                    item_moneda.setTextAlignment(Qt.AlignCenter)
-                    item_cantidad = QStandardItem(str(cantidad))
-                    item_cantidad.setTextAlignment(Qt.AlignCenter)
-                    self.model.appendRow([item_moneda, item_cantidad])
+                    if cantidad > 0:
+                        any_change = True
+                        item_moneda = QStandardItem(moneda_str)
+                        item_moneda.setTextAlignment(Qt.AlignCenter)
+                        item_cantidad = QStandardItem(str(cantidad))
+                        item_cantidad.setTextAlignment(Qt.AlignCenter)
+                        self.model.appendRow([item_moneda, item_cantidad])
+                if not any_change:
+                    # No denominations to return; show informational dialog
+                    self.show_dialog("No hay cambio para devolver.", "Información", QMessageBox.Information)
 
         except ValueError as e:
             # QMessageBox.warning(self, "Error de pago. Dinero faltante", f"{str(e)}")

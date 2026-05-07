@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle(title)
         self.setFixedSize(400, 400)
+        self.set_widget_font(self, font_size=FONT_SIZE)
         # Su código aquí
 
         layoutV = QVBoxLayout()
@@ -87,17 +88,22 @@ class MainWindow(QMainWindow):
         # asignamos el spin al layouth01
         layoutH3.addWidget(self.w_cantidad_dev)
 
-        # LayoutH90 - listado monedas
-        self.lista_monedas = QListView()
-        items = ["500.0€", "200.0€", "100.0€", "50.0€", "20.0€", "10.0€", "5.0€", "2.0€", "1.0€", "0.5€", "0.2€",
-                 "0.1€", "0.05€", "0.02€", "0.01€"]
-        model = QStandardItemModel()
-        model.setHorizontalHeaderLabels(["Billete/Moneda", "Cantidad"])
-        self.lista_monedas.setModel(model)
-        for i in items:
-            item_moneda = QStandardItem(i)
+        # LayoutH90 - tabla de monedas (usar QTableView con modelo de dos columnas)
+        self.lista_monedas = QTableView()
+        self.model = QStandardItemModel(0, 2, self)  # 0 rows, 2 columns
+        self.model.setHorizontalHeaderLabels(["Billete/Moneda", "Cantidad"])
+        self.lista_monedas.setModel(self.model)
+        self.lista_monedas.horizontalHeader().setStretchLastSection(True)
+        self.lista_monedas.setEditTriggers(QTableView.NoEditTriggers)
+        # Populate initial rows with denominations and zero quantity
+        self.denominations = ["500.0€", "200.0€", "100.0€", "50.0€", "20.0€", "10.0€", "5.0€", "2.0€", "1.0€", "0.5€", "0.2€",
+                              "0.1€", "0.05€", "0.02€", "0.01€"]
+        # Populate initial rows with zero quantities
+        for moneda in self.denominations:
+            item_moneda = QStandardItem(moneda)
             item_cantidad = QStandardItem("0")
-            model.appendRow(item_moneda, item_cantidad)
+            self.model.appendRow([item_moneda, item_cantidad])
+
 
         # IA
         # self.lista_monedas = QTableView()
@@ -135,25 +141,41 @@ class MainWindow(QMainWindow):
         widget.setFont(font)
 
     def onclick_calcular(self):
-            try:
-                self.cambio_dict, cambio_total = calcular_cambio_monedas(self.w_importe_prod.value(), self.w_cantidad_cli.value())
-                print(f"El cambio a devolver es: {self.cambio_dict}")
+        try:
+            self.cambio_dict, cambio_total = calcular_cambio_monedas(self.w_importe_prod.value(), self.w_cantidad_cli.value())
+            # If both importe and pago are zero, show info and skip further processing
+            if self.w_importe_prod.value() == 0 and self.w_cantidad_cli.value() == 0:
+                self.show_dialog("Importe y pago son 0. No hay cambio.", "Información", QMessageBox.Information)
+                self.w_cantidad_dev.setValue(0)  # No change
+            else:
+                self.w_cantidad_dev.setValue(cambio_total)  # Asignamos el valor al QDoubleSpinBox
 
-                self.w_cantidad_dev.setValue(cambio_total) # Asignamos el valor al QDoubleSpinBox
+                # Actualizar el modelo de la tabla con el cambio calculado
+                # Update table with all denominations, showing quantity to give (0 if none)
+                self.model.setRowCount(0)  # clear existing rows
+                for moneda_str in self.denominations:
+                    # Convert string like "500.0€" to numeric value for lookup
+                    valor = float(moneda_str.replace('€', ''))
+                    cantidad = self.cambio_dict.get(valor, 0)
+                    item_moneda = QStandardItem(moneda_str)
+                    item_moneda.setTextAlignment(Qt.AlignCenter)
+                    item_cantidad = QStandardItem(str(cantidad))
+                    item_cantidad.setTextAlignment(Qt.AlignCenter)
+                    self.model.appendRow([item_moneda, item_cantidad])
 
+        except ValueError as e:
+            # QMessageBox.warning(self, "Error de pago. Dinero faltante", f"{str(e)}")
+            self.show_dialog(f"{e}", "Error: Dinero insuficiente.")
 
+    def show_dialog(self, texto: str, title: str = "Error", icon=QMessageBox.Critical):
+        dialog = QMessageBox(self)
+        self.set_widget_font(dialog, FONT_SIZE)
+        dialog.setWindowTitle(title)
+        dialog.setIcon(icon)
+        dialog.setText(texto)
+        dialog.setStandardButtons(QMessageBox.Ok)
+        dialog.exec()
 
-                # # Actualizar el modelo de la tabla
-                # self.model.setRowCount(0) # Limpiar tabla
-                # for moneda, cantidad in self.cambio_dict.items():
-                #     item_moneda = QStandardItem(f"{moneda} €")
-                #     item_moneda.setTextAlignment(Qt.AlignCenter)
-                #     item_cantidad = QStandardItem(str(cantidad))
-                #     item_cantidad.setTextAlignment(Qt.AlignCenter)
-                #     self.model.appendRow([item_moneda, item_cantidad])
-
-            except ValueError as e:
-                QMessageBox.warning(self, "Error de pago. Dinero faltante", f"{str(e)}")
 
 
     # Punto de entrada de la App

@@ -2,7 +2,8 @@ import sys
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QVBoxLayout, QWidget, QHBoxLayout, QGridLayout
+from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QVBoxLayout, QWidget, QHBoxLayout, QGridLayout, \
+    QStatusBar
 from UserControl import CustomColor, CustomColorLabel
 
 
@@ -11,9 +12,19 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle(title)
+
+        # Satus Bar
+        statusBar = QStatusBar(self)
+        self.setStatusBar(statusBar)
+
+        layout = QVBoxLayout() # Layout general
+
         # Su código aquí
 
         # Fin de bloque de código
+
+        widget = QWidget()
+        widget.setLayout(layout)
         self.setCentralWidget(QWidget)
 
 # Punto de entrada de la App

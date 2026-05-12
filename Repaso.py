@@ -52,11 +52,13 @@ class MainWindow(QMainWindow):
         self.set_widget_font(self.label, FONT_SIZE)
         layout99.addWidget(self.label)
 
+        layouth1 = QHBoxLayout()
+
         button1 = QPushButton("Boton")
         self.set_widget_font(button1, FONT_SIZE)
         button1.clicked.connect(lambda: self.cagonto(f"Esto es el envio de texto mediante el lambda número {random.randint(0, 100)}. ")) # Si la funcion tiene parametros
         #button1.clicked.connect(self.cagonto) # Si la funcion no tiene parametros
-        layout.addWidget(button1)
+        layouth1.addWidget(button1)
 
         layouth2 = QHBoxLayout()
 
@@ -86,14 +88,16 @@ class MainWindow(QMainWindow):
 
         # TABS diferentes
         tabs = QTabWidget()
-        tabs.setTabPosition(QTabWidget.East)  # Cambiar la posición de las tabs
+        tabs.setTabPosition(QTabWidget.North)  # Cambiar la posición de las tabs
         tabs.setMovable(True)  # Permitir que se muevan las tabs
 
         for n, color in enumerate(["red", "green", "blue"]):
             tabs.addTab(CustomColorLabel(color, f"Tab {n}"), color)
 
+        layout.addWidget(tabs)
 
         # Layouts
+        layout.addLayout(layouth1)
         layout.addLayout(layouth2)
         layout.addLayout(layouth3)
         layout.addLayout(layout99)

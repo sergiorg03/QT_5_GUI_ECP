@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
         layout1 = QHBoxLayout()
 
         self.slider = QSlider(Qt.Horizontal)
+        self.slider.setRange(0, 100)
         layout1.addWidget(self.slider)
 
         self.dial = QDial()

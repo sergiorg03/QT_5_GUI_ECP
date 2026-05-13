@@ -23,13 +23,13 @@ from PyQt5.QtWidgets import (
 )
 from UserControl import CustomColor, CustomColorLabel
 
-FONT_SIZE = 15
+
 
 
 # ============================================================================
 # FUNCIONES HELPER
 # ============================================================================
-
+FONT_SIZE = 15
 def set_widget_font(widget, font_size):
     """Establece el tamaño de fuente de un widget."""
     font = widget.font()
@@ -1225,3 +1225,39 @@ def ejemplo_formulario():
         "guardar": btn_guardar,
         "cancelar": btn_cancelar
     }
+
+# ============================================================================
+# TEMPLATES
+# ============================================================================
+
+templates               -> Muestra los templates creados
+layout                  -> Crea QVBoxLayout o QHBoxLayout
+grid                    -> Crea QGridLayout y coloca widgets en fila/columna 
+dialog                  -> Crea QDialog (modal con exec_ o no modal con show) y botones aceptar/cancelar
+fileDialog              -> Abre QFileDialog para elegir archivo, varios archivos o carpeta (getOpenFileName, etc.)
+messageBox              -> Muestra QMessageBox.information / question / warning / critical con botones estándar
+toolbar                 -> Crea QToolBar, añade QAction o QWidget 
+menuBar                 -> Crea QMenuBar con QMenu y QAction (atajos, iconos, submenús)
+statusBar               -> Crea QStatusBar o temporales (showMessage)
+tabWidget               -> Crea QTabWidget, añade pestañas con addTab(widget, título) y cambia índice actual
+table                   -> Crea QTableView (o tabla) con modelo (QStandardItemModel) y cabeceras
+listWidget              -> Crea QListWidget, añade QListWidgetItem y reacciona a itemClicked / currentItemChanged
+dateTimeEdit            -> Crea QDateTimeEdit para editar fecha y hora (setDateTime, dateTimeChanged)
+timeEdit                -> Crea QTimeEdit solo para hora (setTime, timeChanged)
+dateEdit                -> Crea QDateEdit solo para fecha (setDate, dateChanged)
+progressBar             -> Crea QProgressBar con setRange, setValue o modo indeterminado (setRange(0,0))
+lcdNumber               -> Crea QLCDNumber estilo display (setDigitCount, display, setSegmentStyle)
+dial                    -> Crea un QDial (rueda): setMinimum/setMaximum, setValue, señal valueChanged
+button                  -> Crea QPushButton con setText, icono opcional y señal clicked
+checkBox                -> Crea QCheckBox con setChecked y señal stateChanged
+comboBox                -> Crea QComboBox con addItem/addItems y señal currentIndexChanged o activated
+label                   -> Crea QLabel con setText o setTextFormat (RichText)
+labelImg                -> Crea QLabel y asigna imagen con setPixmap(QPixmap(ruta)) o scaled
+lineEdit                -> Crea QLineEdit una línea (setText, setPlaceholderText, textChanged)
+mainWindow              -> Crea QMainWindow, setCentralWidget y opcionalmente menú, barra de estado, toolbar
+radio                   -> Crea QRadioButton; agrupa varios con QButtonGroup para exclusión mutua
+setFont                 -> Función que recibe un widget y un tamaño en puntos: copia font(), setPointSize, setFont
+slider                  -> Crea QSlider (Qt.Horizontal o Vertical) con setRange, setValue, valueChanged
+spinBox                 -> Crea QSpinBox entero con setRange, setValue, valueChanged
+spinBoxDouble           -> Crea QDoubleSpinBox con decimales, setSingleStep, valueChanged
+textEdit                -> Crea QTextEdit texto multilínea (setPlainText, toPlainText, textChanged)

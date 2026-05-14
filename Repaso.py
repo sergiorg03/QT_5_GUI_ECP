@@ -52,11 +52,13 @@ class MainWindow(QMainWindow):
         self.set_widget_font(self.label, FONT_SIZE)
         layout99.addWidget(self.label)
 
+        layouth1 = QHBoxLayout()
+
         button1 = QPushButton("Boton")
         self.set_widget_font(button1, FONT_SIZE)
         button1.clicked.connect(lambda: self.cagonto(f"Esto es el envio de texto mediante el lambda número {random.randint(0, 100)}. ")) # Si la funcion tiene parametros
         #button1.clicked.connect(self.cagonto) # Si la funcion no tiene parametros
-        layout.addWidget(button1)
+        layouth1.addWidget(button1)
 
         layouth2 = QHBoxLayout()
 
@@ -84,18 +86,54 @@ class MainWindow(QMainWindow):
         slider.valueChanged.connect(lambda: self.cagonto(text=str(slider.value())))
         layouth3.addWidget(slider)
 
-        # TABS diferentes
+        # TABS diferentes colores (Hereda de QLABEL)
         tabs = QTabWidget()
-        tabs.setTabPosition(QTabWidget.East)  # Cambiar la posición de las tabs
+        tabs.setTabPosition(QTabWidget.North)  # Cambiar la posición de las tabs
         tabs.setMovable(True)  # Permitir que se muevan las tabs
 
         for n, color in enumerate(["red", "green", "blue"]):
             tabs.addTab(CustomColorLabel(color, f"Tab {n}"), color)
 
+        layout.addWidget(tabs)
+
+        # TABS diferentes colores (Hereda de Qlayout)
+        """for n, color in enumerate(["red", "green", "blue"]):
+            
+            tabs = QWidget()
+            #tabs.setTabPosition(QTabWidget.West)  # Cambiar la posición de las tabs
+            #tabs.setMovable(True)  # Permitir que se muevan las tabs
+            
+            # Añadimos un label a la pestaña
+            tabs_lay = QVBoxLayout()
+            tabs_lay.addWidget(QLabel(f"Contenido de la pestaña {color}"))
+            
+            # Añadimos un boton a la pestaña
+            buton = QPushButton(f"Boton de la pestaña {color}")
+            buton.clicked.connect(lambda: self.cagonto(text=f"Boton de la pestaña {color}"))
+            tabs_lay.addWidget(buton)
+            
+            tabs.setLayout(tabs_lay)
+            layout.addWidget(tabs) # añadimos las pestañas al layout"""
+
+        layouth4 = QHBoxLayout()
+
+        # Grid Layout
+        grid = QGridLayout()
+        grid.addWidget(CustomColorLabel("red", "Grid Layout"), 0, 0)
+        grid.addWidget(CustomColorLabel("green", "Grid Layout"), 0, 1)
+        #grid.addWidget(CustomColorLabel("yellow", "Grid Layout"), 1, 0)
+        grid.addWidget(CustomColorLabel("blue", "Grid Layout"), 1, 1)
+        b = QPushButton("AddWidget to Grid")
+        b.clicked.connect(lambda: self.cagonto(text="AddWidget to grid"))
+        grid.addWidget(b, 2, 0, 1, 2) # fila, columna, rowspan, colspan
+
+        layouth4.addLayout(grid)
 
         # Layouts
+        layout.addLayout(layouth1)
         layout.addLayout(layouth2)
         layout.addLayout(layouth3)
+        layout.addLayout(layouth4)
         layout.addLayout(layout99)
 
         # Fin de bloque de código
